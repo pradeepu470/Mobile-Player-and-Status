@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    card_view:cardElevation="5dp"
+    card_view:contentPadding="5dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardMaxElevation="5dp"
+    android:layout_margin="5dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="50dp"
+            android:layout_height="80dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginTop="6dp" />
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_toRightOf="@id/image_view"
+            android:layout_toEndOf="@id/image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:text="Amzon"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="4dp" />
+        <TextView
+            android:id="@+id/app_package_Name"
+            android:layout_below="@id/app_name"
+            android:layout_toEndOf="@id/image_view"
+            android:layout_toRightOf="@id/image_view"
+            android:layout_width="wrap_content"
+            android:text="0 MB"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:textColor="#795548" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

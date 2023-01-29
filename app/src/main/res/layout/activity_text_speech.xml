@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_record_playback"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context="com.pradeep.videoplayercollection.TextSpeech">
+
+    <EditText
+        android:id="@+id/enterTextData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:hint="Please enter text for audio"
+        android:layout_marginTop="42dp"
+        android:ems="10">
+        <requestFocus />
+    </EditText>
+
+    <Spinner
+        android:id="@+id/select_language"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:autofillHints="please select lanuguage"
+        android:layout_alignLeft="@+id/enterTextData"
+        android:layout_below="@+id/enterTextData"
+        android:layout_marginTop="39dp"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/speeckButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/select_language"
+        android:layout_alignLeft="@+id/select_language"
+        android:layout_marginLeft="183dp"
+        android:layout_marginTop="41dp"
+        android:src="@drawable/audio_recorder"
+        android:text="Speak" />
+
+
+</RelativeLayout>
+
