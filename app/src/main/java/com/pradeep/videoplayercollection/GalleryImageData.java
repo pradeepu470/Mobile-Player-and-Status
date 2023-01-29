@@ -13,12 +13,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,9 +35,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -73,13 +80,12 @@ public class GalleryImageData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galary_image);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
-                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mGallaryLayout = findViewById(R.id.galary_view);
         mImageLayout = findViewById(R.id.image_full_view);
         mFullImage = findViewById(R.id.image_full_view_display);
         imageListView = (RelativeLayout) findViewById(R.id.image_view_display);
         mContext = this;
+        listImage = new ArrayList<>();
         final CardView image_view = (CardView) findViewById(R.id.image_view);
         final CardView camera = (CardView) findViewById(R.id.camera);
         final CardView image_editor = (CardView) findViewById(R.id.image_editor);
@@ -117,22 +123,32 @@ public class GalleryImageData extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e(TAG,"toolbar");
                 onBackPressed();
             }
         });
         display();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.e(TAG,"toolbar");
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void display() {
         Thread thread = new Thread(){
             @Override
             public void run() {
-                listImage = getFilePaths();
+                listImage.addAll(getFilePaths());
             }
         };
         thread.start();
-
-
     }
 
     private void openCamara() {
@@ -142,6 +158,7 @@ public class GalleryImageData extends AppCompatActivity {
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
+                ex.printStackTrace();
                 Log.i(TAG, "IOException");
             }
             if (photoFile != null) {
@@ -155,9 +172,9 @@ public class GalleryImageData extends AppCompatActivity {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "IMG_" + timeStamp;
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        File image = new File(storageDir.getAbsolutePath()+"/"+imageFileName+ ".jpg");
         fileUri = image;
         return image;
     }
@@ -169,18 +186,26 @@ public class GalleryImageData extends AppCompatActivity {
                 if (resultCode != RESULT_CANCELED) {
                     if (resultCode == RESULT_OK) {
                         saveImageToExternalStorage(fileUri);
+                    } else {
+                        fileUri.delete();
                     }
+                } else {
+                    fileUri.delete();
                 }
         }
     }
 
     public void saveImageToExternalStorage(File finalBitmap) {
-        Intent galleryIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri picUri = Uri.fromFile(finalBitmap);
-        galleryIntent.setData(picUri);
-        GalleryImageData.this.sendBroadcast(galleryIntent);
-        LinearLayout allview = (LinearLayout) findViewById(R.id.all_view);
-        allview.setVisibility(View.VISIBLE);
+        try {
+            Intent galleryIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri picUri = Uri.fromFile(finalBitmap);
+            galleryIntent.setData(picUri);
+            GalleryImageData.this.sendBroadcast(galleryIntent);
+            LinearLayout allview = (LinearLayout) findViewById(R.id.all_view);
+            allview.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return;
     }
 
@@ -323,10 +348,10 @@ public class GalleryImageData extends AppCompatActivity {
         String[] projection = {MediaStore.Images.ImageColumns.DATA};
         Cursor c = null;
         SortedSet<String> dirList = new TreeSet<String>();
-        ArrayList<Object> resultIAV = new ArrayList<Object>();
+        ArrayList<String> resultIAV = new ArrayList<String>();
         String[] directories = null;
         if (u != null) {
-            c = managedQuery(u, projection, null, null, null);
+            c = getContentResolver().query(u, projection, null, null, null);
         }
 
         if ((c != null) && (c.moveToFirst())) {
@@ -362,9 +387,7 @@ public class GalleryImageData extends AppCompatActivity {
                             || imagePath.getName().contains(".gif") || imagePath.getName().contains(".GIF")
                             || imagePath.getName().contains(".bmp") || imagePath.getName().contains(".BMP")
                     ) {
-                        String path = imagePath.getAbsolutePath();
-                        ImageObject temp = new ImageObject(path,false);
-                        resultIAV.add(temp);
+                        resultIAV.add(imagePath.getAbsolutePath());
 
                     }
                 } catch (Exception e) {
@@ -373,7 +396,7 @@ public class GalleryImageData extends AppCompatActivity {
             }
         }
         if (t != null) {
-            c = managedQuery(t, projection, null, null, null);
+            c = getContentResolver().query(t, projection, null, null, null);
         }
         if ((c != null) && (c.moveToFirst())) {
             do {
@@ -408,12 +431,7 @@ public class GalleryImageData extends AppCompatActivity {
                             || imagePath.getName().contains(".gif") || imagePath.getName().contains(".GIF")
                             || imagePath.getName().contains(".bmp") || imagePath.getName().contains(".BMP")
                     ) {
-
-
-                        String path = imagePath.getAbsolutePath();
-                        ImageObject temp = new ImageObject(path,false);
-                        resultIAV.add(temp);
-
+                        resultIAV.add(imagePath.getAbsolutePath());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -422,8 +440,30 @@ public class GalleryImageData extends AppCompatActivity {
         }
 
         Log.e(TAG, "Profile....list  size "+resultIAV.size());
+        Collections.sort(resultIAV, new Comparator<String>() {
+            @Override
+            public int compare(String lhs, String rhs) {
+                File f1 = new File(lhs);
+                File f2 = new File(rhs);
 
-        return resultIAV;
+                if (f1.lastModified() > (f2.lastModified())) {
+                    return -1;
+                } else if (f1.lastModified() < (f2.lastModified())) {
+                    return +1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        Set<String> set = new LinkedHashSet<String>(resultIAV);
+        resultIAV.clear();
+        resultIAV.addAll(set);
+        ArrayList <Object> result = new ArrayList<>();
+        for(int i = 0; i < resultIAV.size(); i++) {
+            ImageObject temp = new ImageObject(resultIAV.get(i),false);
+            result.add(temp);
+        }
+        return result;
     }
 
     public ArrayList<HashMap<String, String>> getAudioList() {
@@ -446,6 +486,7 @@ public class GalleryImageData extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Log.e(TAG,"on back pressed");
         LinearLayout delete = (LinearLayout) findViewById(R.id.image_delete_layout);
         if(delete.getVisibility() == View.VISIBLE) {
             deselectAll();

@@ -12,12 +12,12 @@
     android:layout_margin="5dp">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        >
+        android:layout_height="60dp">
         <ImageView
             android:id="@+id/image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="80dp"
+            android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher"
             android:layout_marginTop="6dp" />
         <TextView
@@ -27,7 +27,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:layout_marginTop="6dp"
+            android:text="Amzon"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="4dp" />
         <TextView
             android:id="@+id/app_package_Name"
@@ -35,6 +36,7 @@
             android:layout_toEndOf="@id/image_view"
             android:layout_toRightOf="@id/image_view"
             android:layout_width="wrap_content"
+            android:text="0 MB"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:textColor="#795548" />

@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFEFF"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <LinearLayout
+                    android:id="@+id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Welcome To Video Player"
+                        android:textColor="#FFF"
+                        android:textSize="20dp" />
+
+                </LinearLayout>
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/login_page"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/appBar"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="3dp"
+                    app:cardUseCompatPadding="true"
+                    card_view:cardBackgroundColor="#FFFEFF">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:text="Login"
+                            android:textColor="#7c4dff"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/round_background"
+                            android:textColorHint="@color/deeppurple">
+
+                            <EditText
+                                android:id="@+id/username"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawableStart="@drawable/ic_avatar"
+                                android:drawablePadding="2dp"
+                                android:hint="Email/Number"
+                                android:singleLine="true" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="40dp"
+                            android:background="@drawable/round_background"
+                            android:textColorHint="@color/deeppurple"
+                            app:passwordToggleDrawable="@drawable/show_password_selector"
+                            app:passwordToggleEnabled="true">
+
+                            <EditText
+                                android:id="@+id/password"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawableStart="@drawable/ic_login"
+                                android:drawablePadding="2dp"
+                                android:hint="Password"
+                                android:inputType="textPassword" />
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:text="Invalid credentials"
+                        android:textColor="@color/colorError"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/loginButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginEnd="60dp"
+                        android:background="@color/deeppurple"
+                        android:text="Login"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/register"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
+                        android:text="Don't have an Account? Sign Up"
+                        android:textColor="@color/deeppurple" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/register_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/appBar"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="3dp"
+                    app:cardUseCompatPadding="true"
+                    card_view:cardBackgroundColor="#FFFEFF">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:text="Register"
+                            android:textColor="#7c4dff"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/round_background"
+                            android:textColorHint="@color/deeppurple">
+
+                            <EditText
+                                android:id="@+id/register_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawablePadding="2dp"
+                                android:gravity="center"
+                                android:hint="Enter Full Name"
+                                android:singleLine="true" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/round_background"
+                            android:textColorHint="@color/deeppurple">
+
+                            <EditText
+                                android:id="@+id/register_Number"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawablePadding="2dp"
+                                android:gravity="center"
+                                android:hint="Enter your mobile number"
+                                android:inputType="number"
+                                android:singleLine="true" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/round_background"
+                            android:textColorHint="@color/deeppurple">
+
+                            <EditText
+                                android:id="@+id/register_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawablePadding="2dp"
+                                android:gravity="center"
+                                android:hint="Enter your Email Id"
+                                android:singleLine="true" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/round_background"
+                            android:textColorHint="@color/deeppurple"
+                            app:passwordToggleDrawable="@drawable/show_password_selector"
+                            app:passwordToggleEnabled="true">
+
+                            <EditText
+                                android:id="@+id/register_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawableStart="@drawable/ic_login"
+                                android:drawablePadding="2dp"
+                                android:gravity="center"
+                                android:hint="Password"
+                                android:inputType="textPassword" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/round_background"
+                            android:textColorHint="@color/deeppurple"
+                            app:passwordToggleDrawable="@drawable/show_password_selector"
+                            app:passwordToggleEnabled="true">
+
+                            <EditText
+                                android:id="@+id/register_confirm_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:drawableStart="@drawable/ic_login"
+                                android:drawablePadding="2dp"
+                                android:gravity="center"
+                                android:hint="Confirm Password"
+                                android:inputType="textPassword" />
+                        </android.support.design.widget.TextInputLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center"
+                            android:layout_height="120dp">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_marginBottom="10dp"
+                                android:id="@+id/profile_img"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginStart="10dp"
+                                android:src="@drawable/no_thumbnail"
+                                android:scaleType="fitXY"
+                                android:layout_height="100dp"/>
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_marginStart="30dp"
+                                android:id="@+id/upload_profile"
+                                android:padding="10dp"
+                                android:background="@color/deeppurple"
+                                android:text="upload image"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/register_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:text="Invalid credentials"
+                        android:textColor="@color/colorError"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/registerButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginEnd="60dp"
+                        android:background="@color/deeppurple"
+                        android:text="Rigster"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/login_page_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
+                        android:text="Go to Login Page? Login"
+                        android:textColor="@color/deeppurple" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/op_progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</android.support.design.widget.CoordinatorLayout>

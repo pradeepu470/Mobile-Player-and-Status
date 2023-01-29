@@ -3,8 +3,6 @@ package com.pradeep.videoplayercollection;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -15,7 +13,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Parcel;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -453,7 +450,7 @@ public class RecordPlaybackActivity extends AppCompatActivity
                 switch (what) {
                     case 1: {
                         btn_yes.setText("conform");
-                        text_dialog.setText("Are you sure want to uninstall app?");
+                        text_dialog.setText("Are you sure want to delete Video?");
                         btn_yes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

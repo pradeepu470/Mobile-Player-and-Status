@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+
 public class zoomData extends android.support.v7.widget.AppCompatImageView {
     Matrix matrix = new Matrix();
     static final int NONE = 0;

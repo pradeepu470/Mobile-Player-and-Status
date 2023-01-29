@@ -1,87 +1,54 @@
 package com.pradeep.videoplayercollection;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.OvershootInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
-import android.widget.Spinner;
-
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.CALL_PHONE;
@@ -95,7 +62,6 @@ import static android.Manifest.permission.SEND_SMS;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecognitionListener {
     private final String TAG = "MainActivity";
-    private static final String USER_DATA_BASE_LOCATION = "/data/data/com.pradeep.videoplayercollection/databases/userdata.db";
     private ProgressBar mTaskInProgress;
     private MediaRecorder recorder;
     private File audiofile = null;
@@ -110,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Activity mActivity;
     private FloatingActionButton fab;
     private Toolbar toolbar;
-    private Animation fabOpenAnimation;
-    private Animation fabCloseAnimation;
     private ImageView userImage;
     private TextView userName;
     private SessionManager mSession;
@@ -131,14 +95,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onPause() {
         Log.v(TAG, "onPause");
         super.onPause();
-       //stopService(new Intent(MainActivity.this, FloatWidgetServiceViewData.class));
     }
 
     @Override
     protected void onResume() {
         Log.v(TAG, "onResume");
         super.onResume();
-       // startService(new Intent(MainActivity.this, FloatWidgetServiceViewData.class));
     }
 
     @Override
@@ -159,8 +121,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (webView.canGoBack()){
             webView.goBack();
-        }else {
-            finish();
+        } else {
+            if(webViewLayout.getVisibility() == View.VISIBLE) {
+                webViewLayout.setVisibility(View.GONE);
+                mainLayout.setVisibility(View.VISIBLE);
+            } else {
+                finish();
+            }
         }
     }
 
@@ -181,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab = (FloatingActionButton) findViewById(R.id.fab);
         mSession = SessionManager.getInstance(MainActivity.this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         View hView =  navigationView.getHeaderView(0);
         userImage = (ImageView) hView.findViewById(R.id.user_login_image);
         userName = (TextView) hView.findViewById(R.id.user_login_name);
@@ -193,14 +161,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String imageUrl = mSession.getUserImage();
         if(imageUrl!= null && imageUrl.length() > 0) {
             Glide.with(MainActivity.this).load(imageUrl).placeholder(R.drawable.maxresdefault).error(R.drawable.no_thumbnail).into(userImage);
-
         }
         listenerAllRequest();
         mContext = this;
         if (checkPermission()) {
-            Toast.makeText(MainActivity.this, "All Permissions Granted Successfully", Toast.LENGTH_LONG).show();
+
         } else {
             requestPermission();
+            Toast.makeText(MainActivity.this, "All Permissions Granted Successfully", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -215,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         webView.setWebViewClient(new WebViewClient(){
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 webView.loadUrl("file:///android_assets/error.html");
-
             }
             public void onPageFinished(WebView view, String url) {
                 swipe.setRefreshing(false);
@@ -377,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 if (checkPermission()) {
                     Log.v(TAG, "Profile....other_file");
-
+                    Toast.makeText(MainActivity.this, "Coming soon....", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(MainActivity.this, "Permission not allow", Toast.LENGTH_SHORT).show();
                 }
@@ -425,28 +392,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        Log.e(TAG,"login logout");
         return super.onOptionsItemSelected(item);
     }
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Log.e(TAG,"login logout");
+
         if (id == R.id.nav_home) {
-            // Handle the camera action
+            Toast.makeText(mContext, "Coming soon....", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_guide) {
 
-        } else if (id == R.id.nav_organize) {
-
-        } else if (id == R.id.reset_password) {
         } else if (id == R.id.logout) {
-            Log.v(TAG, "logout");
-            // TODO: Add logic to clear network session
+            Log.e(TAG,"login");
             mSession = new SessionManager(getApplicationContext());
             mSession.setLogin(false, 0);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            Log.e(TAG,"login done");
             return true;
         } else if (id == R.id.nav_settings) {
+            // set profile.....img gmail, phone , name etc...
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

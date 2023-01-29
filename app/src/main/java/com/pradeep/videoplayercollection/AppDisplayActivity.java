@@ -11,7 +11,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
+import android.os.StrictMode;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,13 +35,18 @@ import android.widget.Toast;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static android.service.notification.Condition.SCHEME;
 
@@ -57,10 +66,19 @@ public class AppDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_display);
         mActivity = this;
         mContext = this;
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerViewLayoutManager = new GridLayoutManager(AppDisplayActivity.this, 1);
+        recyclerViewLayoutManager = new GridLayoutManager(AppDisplayActivity.this, 2);
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
-        mAllInstalledAppList = GetAllInstalledApkInfo();
+        mAllInstalledAppList = new ArrayList<>();
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                GetAllInstalledApkInfo();
+            }
+        }.start();
         mAdapter = new AppDataDisplayAdaptor(AppDisplayActivity.this, mAllInstalledAppList, new CustomItemClickListener() {
             @Override
             public void onItemClick(View v, final int position, final List<Object> list) {
@@ -110,6 +128,17 @@ public class AppDisplayActivity extends AppCompatActivity {
         mToolbar.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.e("TAG","toolbar");
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public static void setForceShowIcon(PopupMenu popupMenu) {
         try {
             Field[] fields = popupMenu.getClass().getDeclaredFields();
@@ -143,6 +172,7 @@ public class AppDisplayActivity extends AppCompatActivity {
             share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(srcFile));
             startActivity(Intent.createChooser(share, "PersianCoders"));
         } catch (Exception e) {
+            e.printStackTrace();
             Log.e("ShareApp", e.getMessage());
         }
     }
@@ -210,8 +240,7 @@ public class AppDisplayActivity extends AppCompatActivity {
     }
 
 
-    public List<Object> GetAllInstalledApkInfo() {
-        List<Object> appPackageName = new ArrayList<>();
+    public void GetAllInstalledApkInfo() {
         Map<String,String> appList = new TreeMap<>();
         final PackageManager pm = AppDisplayActivity.this.getPackageManager();
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -221,10 +250,41 @@ public class AppDisplayActivity extends AppCompatActivity {
                 appList.put(GetAppName(listInfo.packageName),listInfo.packageName);
             }
         }
+        HashMap<String, String> map = new HashMap<>();
+        ArrayList<String> list = new ArrayList<>();
         for (String packageInfo : appList.values()) {
-            appPackageName.add(packageInfo);
+            try {
+                PackageManager packageManager = mContext.getPackageManager();
+                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageInfo, 0);
+                String ApplicationLabelName = "";
+                if (applicationInfo != null) {
+                    ApplicationLabelName = (String) packageManager.getApplicationLabel(applicationInfo);
+                }
+                map.put(packageInfo, ApplicationLabelName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return appPackageName;
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            list.add(entry.getValue());
+        }
+        Collections.sort(list, new Comparator<String>() {
+            public int compare(String str, String str1) {
+                return (str).compareToIgnoreCase(str1);
+            }
+        });
+        for (String str : list) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                if (entry.getValue().equals(str)) {
+                    mAllInstalledAppList.add(entry.getKey());
+                }
+            }
+        }
+        mActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void onBackPressed() {

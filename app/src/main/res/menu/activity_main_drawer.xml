@@ -13,17 +13,9 @@
             android:icon="@drawable/ic_guide"
             android:title="Guide" />
         <item
-            android:id="@+id/nav_organize"
-            android:icon="@drawable/ic_organise"
-            android:title="Organize" />
-        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
-        <item
-            android:id="@+id/reset_password"
-            android:icon="@drawable/ic_recorded"
-            android:title="Reset Password" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_shedule_recording"

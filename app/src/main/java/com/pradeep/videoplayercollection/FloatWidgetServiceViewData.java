@@ -3,13 +3,10 @@ package com.pradeep.videoplayercollection;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,7 +15,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class FloatWidgetServiceViewData extends Service {
